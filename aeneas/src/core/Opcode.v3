@@ -78,6 +78,13 @@ type Opcode {
 	case RangeGetElem;
 	case RangeSetElem;
 	case RangeGetLength;
+	case RangeStartPlusIndex;
+	case RangeStartFromPointer;
+	// Normalized Range operations.
+	case NormRangeGetElem;
+	case NormRangeGetElemElem(index: int);
+	case NormRangeSetElem;
+	case NormRangeSetElemElem(index: int);
 	// Component operations
 	case Init(method: IrMethod);
 	case ComponentGetField(field: IrField);
@@ -247,6 +254,12 @@ component Opcodes {
 		t[Opcode.RangeFromTo.tag] = 		F;
 		t[Opcode.RangeFromPlus.tag] = 		F;
 		t[Opcode.RangeGetLength.tag] = 		P;
+		t[Opcode.RangeStartPlusIndex.tag] =	P;
+		t[Opcode.RangeStartFromPointer.tag] =	P;
+		t[Opcode.NormRangeGetElem.tag] = 	F;
+		t[Opcode.NormRangeGetElemElem.tag] = 	F;
+		t[Opcode.NormRangeSetElem.tag] = 	NONE;
+		t[Opcode.NormRangeSetElemElem.tag] = 	NONE;
 
 		t[Opcode.Init.tag] = 			NONE;
 		t[Opcode.ComponentGetField.tag] = 	NNC;
