@@ -30,6 +30,7 @@ class JvmClassfileBuilder(jprog: JvmProgram, jclass: JvmClass) {
 			V3Kind.FUNCREF =>	jprog.jheap.emitFunctionValue(code, etype, FuncVal.!(val));
 			V3Kind.VOID,
 			V3Kind.COMPONENT =>	; // emit nothing
+			V3Kind.RANGE_START =>	code.iconst(V3.unboxI32(val));
 		} else {
 			unknownValue(etype, val);
 		}
