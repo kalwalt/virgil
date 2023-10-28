@@ -1,0 +1,4 @@
+//@execute (0, 0)=0; (0, 1)=1; (55, 66)=14146
+def main(a: byte, b: byte) -> u16 {
+	return a <| b;
+}

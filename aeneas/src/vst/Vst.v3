@@ -410,6 +410,7 @@ class VstVisitor<E, R> {
 	def visitBitwiseNeg(expr: BitwiseNegExpr, env: E) -> R;
 	def visitAssign(expr: AssignExpr, env: E) -> R;
 	def visitBinOp(expr: BinOpExpr, env: E) -> R;
+	def visitBitConcat(expr: BitConcatExpr, env: E) -> R;
 	def visitIfExpr(expr: IfExpr, env: E) -> R;
 	def visitFuncExpr(expr: FuncExpr, env: E) -> R;
 }
@@ -811,6 +812,17 @@ class BinOpExpr(left: Expr, op: InfixOp, right: Expr) extends Expr {
 		op.op = binop;
 	}
 	def accept<E, R>(v: VstVisitor<E, R>, env: E) -> R { return v.visitBinOp(this, env); }
+	def range() -> FileRange {
+		if (left == null) return op.token.range();
+		var r = FileRanges.ofExpr(left);
+		if (right != null) r = FileRanges.add(r, FileRanges.ofExpr(right));
+		return r;
+	}
+	def point() -> FilePoint { return op.token; }
+}
+// left <| right
+class BitConcatExpr(left: Expr, op: InfixOp, right: Expr) extends Expr {
+	def accept<E, R>(v: VstVisitor<E, R>, env: E) -> R { return v.visitBitConcat(this, env); }
 	def range() -> FileRange {
 		if (left == null) return op.token.range();
 		var r = FileRanges.ofExpr(left);

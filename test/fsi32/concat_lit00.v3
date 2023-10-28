@@ -1,0 +1,4 @@
+//@execute 0=99
+def main(a: byte) -> int {
+	return 0xF <| a;
+}

@@ -1598,6 +1598,17 @@ class TypeChecker(ERROR: ErrorGen, file: VstFile) extends VstVisitor<Type, Type>
 		}
 		return Int.TYPE;
 	}
+	def inferBitConcatOperandType(expr: Expr) -> IntType {
+		match (expr) {
+			x: BinLiteral => return expr.exactType = Int.getType(false, x.width);
+			x: HexLiteral => return expr.exactType = Int.getType(false, x.width * 4);
+			x: DecLiteral => {
+				error(expr.range(), "TypeError", "decimal literal not allowed in bit concat expression; use hex or binary");
+				return IntType.!(expr.exactType);
+			}
+		}
+		return inferIntegralType(expr, "bitwise concatentation");
+	}
 	def visitRepeatedIndex(exprs: VstList<Expr>) {
 		if (exprs.length() != 1) {
 			error(exprs.range(), "TypeError",
@@ -1744,6 +1755,17 @@ class TypeChecker(ERROR: ErrorGen, file: VstFile) extends VstVisitor<Type, Type>
 		typeCheckExpr(expr.left, op.sig.paramTypes[0], "infix operator");
 		typeCheckExpr(expr.right, op.sig.paramTypes[1], "infix operator");
 		return op.sig.returnType();
+	}
+	def visitBitConcat(expr: BitConcatExpr, outer: Type) -> Type {
+		var lt = inferIntegralType(expr.left, "bitwise concatentation"), rt = inferIntegralType(expr.right, "bitwise concatentation");
+
+		var total_width = lt.width + rt.width;
+		if (total_width > Int.MAX_WIDTH) error(expr.range(), "TypeError",
+			Strings.format3("bitwise concatentation of %s %s exceeds maximum integer width %d", TYPE(lt), TYPE(rt), Int.MAX_WIDTH));
+
+		var signed = lt.signed;
+		if (IntType.?(outer)) signed = IntType.!(outer).signed;
+		return Int.getType(signed, total_width);
 	}
 	def visitIfExpr(expr: IfExpr, outer: Type) -> Type {
 		var args = expr.exprs.asArray(), what = "if expression", len = args.length;

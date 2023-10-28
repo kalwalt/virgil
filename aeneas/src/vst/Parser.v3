@@ -964,8 +964,9 @@ component Parser {
 		while (!operStack.empty() && operStack.peek().prec >= prec) {
 			var right = exprStack.pop(), left = exprStack.pop();
 			var binop = operStack.pop();
-			var expr = if (binop.assign, AssignExpr.new(left, binop, binop.token, right), BinOpExpr.new(left, binop, right));
-			exprStack.push(expr);
+			if (binop.infix == V3Infix.LtOr) exprStack.push(BitConcatExpr.new(left, binop, right));
+			else if (binop.assign) exprStack.push(AssignExpr.new(left, binop, binop.token, right));
+			else exprStack.push(BinOpExpr.new(left, binop, right));
 		}
 	}
 	def parseList<T>(min: int, p: ParserState, begDelim: byte, sepByte: byte, endDelim: byte, f: ParserState -> T) -> VstList<T> {
@@ -1090,6 +1091,7 @@ component Parser {
 				var nch = p.peek(1);
 				if (nch == '=') op = V3Infix.LtEq;
 				else if (nch == '<') op = V3Infix.Shl;
+				else if (nch == '|') op = V3Infix.LtOr;
 				else op = V3Infix.Lt;
 			}
 			'>' => {

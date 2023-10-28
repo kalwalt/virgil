@@ -1,0 +1,10 @@
+//@execute = 57
+def main() -> int {
+	for (i < 256) {
+		var a = byte.view(i), b = byte.view(~i);
+		var expect = (u16.view(a) << 8) | b;
+		var got = a <| b;
+		if (expect != got) return 0 - i;
+	}
+	return 57;
+}

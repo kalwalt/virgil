@@ -1,0 +1,5 @@
+//@execute = 99999
+def main() -> int {
+	var str = "abcde";
+	return str[3] <| str[2] <| str[1] <| str[0];
+}

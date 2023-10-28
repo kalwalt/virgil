@@ -297,6 +297,9 @@ class VstPrinter extends VstVisitor<int, void> {
 	def visitBinOp(expr: BinOpExpr, indent: int) {
 		param("BinOpExpr", expr.op.token.image, Lists.cons2(expr.left, expr.right), expr.exactType, expr.implicitType, indent);
 	}
+	def visitBitConcat(expr: BitConcatExpr, indent: int) {
+		param("BitConcatExpr", expr.op.token.image, Lists.cons2(expr.left, expr.right), expr.exactType, expr.implicitType, indent);
+	}
 	def printStmt(stmt: Stmt, indent: int) {
 		stmt.accept(this, indent);
 	}

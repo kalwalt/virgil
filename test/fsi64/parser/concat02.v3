@@ -1,0 +1,4 @@
+//@parse
+var x = 0 <| b <| c;
+var y = a <| 1 <| c;
+var z = a <| b <| 2;

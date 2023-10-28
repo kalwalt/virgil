@@ -1075,6 +1075,16 @@ class VstSsaGen extends VstVisitor<VstSsaEnv, SsaInstr> {
 		var source = exprSource(expr);
 		return env.addApply(source, c.subst(elimTypeVars), [le, re]);
 	}
+	def visitBitConcat(expr: BitConcatExpr, env: VstSsaEnv) -> SsaInstr {
+		// XXX: improve code generation for bit concat
+		var lt = IntType.!(expr.left.exactType), rt = IntType.!(expr.right.exactType), result = IntType.!(expr.exactType);
+		var i_left = env.genExpr(expr.left), i_right = env.genExpr(expr.right);
+		if (rt.signed) i_right = env.opIntView(rt, Int.getType(false, rt.width), i_right);
+		i_right = env.opIntView(rt, result, i_right);
+		i_left = env.pure(result.opShl(), [env.opIntView(lt, result, i_left), graph.intConst(rt.width)]);
+		return env.pure(result.opOr(), [i_left, i_right]);
+	}
+
 	def genLazyEval(isAnd: bool, left: Expr, right: Expr, env: VstSsaEnv) -> SsaInstr {
 		// isAnd  &&: if(left) right; else (); phi(left, right)
 		// !isAnd ||: if(left) (); else right; phi(left, right)
