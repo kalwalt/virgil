@@ -1,0 +1,4 @@
+//@seman
+var x: u16;
+var y: u32;
+var z: u48 = x <<| y;

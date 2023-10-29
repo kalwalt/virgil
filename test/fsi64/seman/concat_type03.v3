@@ -1,4 +1,4 @@
 //@seman = TypeError @ 4:14
 var x: u8;
-var y: u8;
-var z: u15 = x <<| y;
+var y: string;
+var z: u48 = x <<| y;

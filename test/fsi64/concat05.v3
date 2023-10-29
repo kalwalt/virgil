@@ -1,0 +1,19 @@
+//@execute true=0; false=15
+type M {
+	def m1() -> u2 { return 0; }
+	def m2() -> u2 { return 0; }
+
+	case A {
+		def m2() -> u2 { return 3; }
+	}
+	case B {
+	}
+	case C {
+	}
+}
+
+def main(a: bool) -> int {
+	var f = if(a, M.m1, M.m2);
+	var d: M;
+	return  f(M.C) <<| f(M.B) <<| f(M.A) <<| f(d);
+}

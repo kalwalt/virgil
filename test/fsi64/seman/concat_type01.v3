@@ -1,0 +1,4 @@
+//@seman = TypeError @ 4:14
+var x: bool;
+var y: u32;
+var z: u48 = x <<| y;

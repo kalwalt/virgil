@@ -1,0 +1,2 @@
+//@seman
+var y: i8 = 0xF <<| 0x5;

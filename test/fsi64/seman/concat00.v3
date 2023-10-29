@@ -1,4 +1,4 @@
 //@seman
 var x: u8;
 var y: u8;
-var z: u16 = x <| y;
+var z: u16 = x <<| y;

@@ -1757,7 +1757,7 @@ class TypeChecker(ERROR: ErrorGen, file: VstFile) extends VstVisitor<Type, Type>
 		return op.sig.returnType();
 	}
 	def visitBitConcat(expr: BitConcatExpr, outer: Type) -> Type {
-		var lt = inferIntegralType(expr.left, "bitwise concatentation"), rt = inferIntegralType(expr.right, "bitwise concatentation");
+		var lt = inferBitConcatOperandType(expr.left), rt = inferBitConcatOperandType(expr.right);
 
 		var total_width = lt.width + rt.width;
 		if (total_width > Int.MAX_WIDTH) error(expr.range(), "TypeError",

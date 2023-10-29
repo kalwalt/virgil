@@ -1,5 +1,5 @@
 //@parse
-var x = m(0 <| b);
+var x = m(0 <<| b);
 
 def m(a: int) -> int {
 	return a;

@@ -1,0 +1,12 @@
+//@seman
+var x: u1;
+
+var y2: i2   =         0b0 <<| x;
+var y3: i3   =        0b10 <<| x;
+var y4: i4   =       0b101 <<| x;
+var y5: i5   =      0b1010 <<| x;
+var y6: i6   =     0b10101 <<| x;
+var y7: i7   =    0b101010 <<| x;
+var y8: i8   =   0b1010101 <<| x;
+var y9: i9   =  0b10101010 <<| x;
+var y10: i10 = 0b101010101 <<| x;

@@ -1,0 +1,36 @@
+//@execute 0=42; 1=42; 2=42; 4=42; 8=42; 16=42; 32=42; 64=42; 128=42; 255=42; 3=42; 33=42; 97=42
+
+var f9:  i9;
+var f17: i17;
+var f25: i25;
+var f33: i33;
+var f41: i41;
+var f49: i49;
+var f57: i57;
+var f63: i63;
+
+def set(v: u64) {
+	f9  = i9.view(v);
+	f17 = i17.view(v);
+	f25 = i25.view(v);
+	f33 = i33.view(v);
+	f41 = i41.view(v);
+	f49 = i49.view(v);
+	f57 = i57.view(v);
+	f63 = i63.view(v);
+}
+
+def main(b: byte) -> int {
+	var v = b <<| b <<| b <<| b <<| b <<| b <<| b <<| b;
+	set(v);
+
+	if (f9 != i9.view(v)) return 1000;
+	if (f17 != i17.view(v)) return 2000;
+	if (f25 != i25.view(v)) return 3000;
+	if (f33 != i33.view(v)) return 4000;
+	if (f41 != i41.view(v)) return 5000;
+	if (f49 != i49.view(v)) return 6000;
+	if (f57 != i57.view(v)) return 7000;
+	if (f63 != i63.view(v)) return 8000;
+	return 42;
+}

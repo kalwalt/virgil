@@ -964,7 +964,7 @@ component Parser {
 		while (!operStack.empty() && operStack.peek().prec >= prec) {
 			var right = exprStack.pop(), left = exprStack.pop();
 			var binop = operStack.pop();
-			if (binop.infix == V3Infix.LtOr) exprStack.push(BitConcatExpr.new(left, binop, right));
+			if (binop.infix == V3Infix.LtLtOr) exprStack.push(BitConcatExpr.new(left, binop, right));
 			else if (binop.assign) exprStack.push(AssignExpr.new(left, binop, binop.token, right));
 			else exprStack.push(BinOpExpr.new(left, binop, right));
 		}
@@ -1089,10 +1089,14 @@ component Parser {
 			}
 			'<' => {
 				var nch = p.peek(1);
-				if (nch == '=') op = V3Infix.LtEq;
-				else if (nch == '<') op = V3Infix.Shl;
-				else if (nch == '|') op = V3Infix.LtOr;
-				else op = V3Infix.Lt;
+				match (p.peek(1)) {
+					'=' => op = V3Infix.LtEq;
+					'<' => {
+						if (p.peek(2) == '|') op = V3Infix.LtLtOr;
+						else op = V3Infix.Shl;
+					}
+					_ => op = V3Infix.Lt;
+				}
 			}
 			'>' => {
 				var nch = p.peek(1);

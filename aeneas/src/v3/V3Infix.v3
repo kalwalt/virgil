@@ -22,6 +22,6 @@ enum V3Infix(syntax: string, prec: byte, compound: bool) {
 	Shl	("<<", 12, true),
 	Sar	(">>", 12, true),
 	Shr	(">>>", 12, true),
-	LtOr	("<|", 15, false),
+	LtLtOr	("<<|", 15, false),
 	None	("", 0, false),
 }

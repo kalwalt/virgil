@@ -1,0 +1,66 @@
+//@execute 0=11; 33=11; 55=11; 254=11
+class lf00 {
+	var x: long;
+	var y: long;
+	def get(b: int) -> byte {
+		var lx = x, ly = y;
+		match (b) {
+			0 =>  return byte.view(lx >> 0);
+			1 =>  return byte.view(lx >> 8);
+			2 =>  return byte.view(lx >> 16);
+			3 =>  return byte.view(lx >> 24);
+			4 =>  return byte.view(lx >> 32);
+			5 =>  return byte.view(lx >> 40);
+			6 =>  return byte.view(lx >> 48);
+			7 =>  return byte.view(lx >> 56);
+			8 =>  return byte.view(ly >> 0);
+			9 =>  return byte.view(ly >> 8);
+			10 => return byte.view(ly >> 16);
+			11 => return byte.view(ly >> 24);
+			12 => return byte.view(ly >> 32);
+			13 => return byte.view(ly >> 40);
+			14 => return byte.view(ly >> 48);
+			15 => return byte.view(ly >> 56);
+		}
+		return 0;
+	}
+	def set(b: int, v: byte) -> byte {
+		var lx = x, ly = y;
+		match (b) {
+			0 =>  x = u56.view(lx >> 8)  <<| v;
+			1 =>  x = u48.view(lx >> 16) <<| v <<|  u8.view(lx);
+			2 =>  x = u40.view(lx >> 24) <<| v <<| u16.view(lx);
+			3 =>  x = u32.view(lx >> 32) <<| v <<| u24.view(lx);
+			4 =>  x = u24.view(lx >> 40) <<| v <<| u32.view(lx);
+			5 =>  x = u16.view(lx >> 48) <<| v <<| u40.view(lx);
+			6 =>  x =  u8.view(lx >> 56) <<| v <<| u48.view(lx);
+			7 =>  x =                        v <<| u56.view(lx);
+			8 =>  y = u56.view(ly >> 8)  <<| v;
+			9 =>  y = u48.view(ly >> 16) <<| v <<|  u8.view(ly);
+			10 => y = u40.view(ly >> 24) <<| v <<| u16.view(ly);
+			11 => y = u32.view(ly >> 32) <<| v <<| u24.view(ly);
+			12 => y = u24.view(ly >> 40) <<| v <<| u32.view(ly);
+			13 => y = u16.view(ly >> 48) <<| v <<| u40.view(ly);
+			14 => y =  u8.view(ly >> 56) <<| v <<| u48.view(ly);
+			15 => y =                        v <<| u56.view(ly);
+		}
+		return 0;
+	}
+}
+var before = Array<byte>.new(16);
+def main(a: int) -> int {
+	var l = lf00.new();
+	for (b in [0x01, 0xF0, 0xAA, 0xFF]) {
+		for (j < 16) check(l, j, byte.view(b + a));
+	}
+	return 11;
+}
+def check(l: lf00, b: int, v: byte) -> int {
+	for (i < before.length) before[i] = l.get(i);
+	l.set(b, v);
+	for (i < before.length) {
+		if (i == b) { if (l.get(i) != v) return 1 / 0; }
+		else { if (l.get(i) != before[i]) return 1 / 0; }
+	}
+	return 12;
+}
