@@ -160,6 +160,41 @@ def BASH_HEADER = [
 	"done\n",
 	"DIR=$(cd -P $(dirname \"$S\") >/dev/null 2>&1 && pwd)\n"
 ];
+var list: List<(string, int)>;
+var buf = StringBuilder.new();
+def time<T>(name: string, f: () -> T) -> T {
+	var before = System.ticksUs();
+	var r = f();
+	var after = System.ticksUs();
+	list = List.new((name, after - before), list);
+	return r;
+}
+def printPercent() -> bool {
+	var sum = 0;
+	for (l = list; l != null; l = l.tail) {
+		sum += l.head.1;
+	}
+	for (l = Lists.reverse(list); l != null; l = l.tail) {
+		var t = l.head;
+		buf.puts(t.0).pad(' ', 7)
+		   .puts(": ");
+		var mark = buf.length;
+		var time = t.1;
+		buf.putd(time).rjustify(' ', buf.length - mark, 7)
+			.puts(" us  ");
+		
+		var percent = (1000L * t.1) / sum;
+		mark = buf.length;
+		buf.putd(percent / 10)
+		   .puts(".")
+		   .putd(percent % 10)
+		   .rjustify(' ', buf.length - mark, 5);
+		buf.puts(" %")
+		   .ln();
+		System.puts(buf.toString());
+	}
+	return true;
+}
 // phases of compilation, including parsing, typechecking, initialization, etc
 class Compilation(compiler: Compiler, prog: Program) {
 	var inRunMain: bool;
@@ -172,11 +207,12 @@ class Compilation(compiler: Compiler, prog: Program) {
 			prog.ERROR.copy(compiler.optError);
 			return false;
 		}
-		return parse()
-			&& (!compiler.VstVerify || verify())
-			&& (!compiler.VstInit || init())
-			&& (!compiler.Reachability || reachability())
-			&& emit()
+		return     time("parse", parse)
+			&& time("verify", verify)
+			&& time("init", init)
+			&& time("reach", reachability)
+			&& time("emit", emit)
+			&& printPercent()
 			&& prog.ERROR.noErrors;
 	}
 	def parse() -> bool {
