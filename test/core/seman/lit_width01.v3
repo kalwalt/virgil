@@ -1,0 +1,9 @@
+//@parse
+var x: u1 = 5u1;
+var x: u5 = 6u5;
+var x: u17 = 7u17;
+var x: u31 = 7u31;
+var x: u32 = 8u32;
+var x: u41 = 9u41;
+var x: u63 = 12u63;
+var x: u64 = 13u64;
